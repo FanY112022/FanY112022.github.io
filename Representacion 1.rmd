@@ -1,6 +1,6 @@
 ---
 title: "Representacion 1"
-author: "FanY112022"
+author: "Fanfan Yang"
 date: "30/11/2022"
 output: html_document
 ---

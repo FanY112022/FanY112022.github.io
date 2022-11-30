@@ -1,0 +1,54 @@
+---
+title: "Representacion 2"
+author: "Fanfan Yang"
+date: "30/11/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+if(!require(plotly)){
+  install.packages('plotly',repos='http://cran.us.r-project.org')
+  library(plotly)
+}
+```
+
+
+```{r}
+df <- read.csv("./StudentsPerformance.csv", header = TRUE, sep = ",")
+```
+
+```{r}
+gg.gauge <- function(pos,breaks=c(0,30,50,70,90,100)) {
+  require(ggplot2)
+  get.poly <- function(a,b,r1=0.5,r2=1.0) {
+    th.start <- pi*(1-a/100)
+    th.end   <- pi*(1-b/100)
+    th       <- seq(th.start,th.end,length=100)
+    x        <- c(r1*cos(th),rev(r2*cos(th)))
+    y        <- c(r1*sin(th),rev(r2*sin(th)))
+    return(data.frame(x,y))
+  }
+  ggplot()+ 
+    geom_polygon(data=get.poly(breaks[1],breaks[2]),aes(x,y),fill="#d7191c")+
+    geom_polygon(data=get.poly(breaks[2],breaks[3]),aes(x,y),fill="#fdae61")+
+    geom_polygon(data=get.poly(breaks[3],breaks[4]),aes(x,y),fill="#ffffbf")+      geom_polygon(data=get.poly(breaks[4],breaks[5]),aes(x,y),fill="#a6d96a")+
+    geom_polygon(data=get.poly(breaks[5],breaks[6]),aes(x,y),fill="#1a9641")+
+    geom_polygon(data=get.poly(pos-1,pos+1,0.2),aes(x,y))+
+    geom_text(data=as.data.frame(breaks), size=5, fontface="bold", vjust=0, 
+              aes(x=1.1*cos(pi*(1-breaks/100)),y=1.1*sin(pi*(1-breaks/100)),label=c("0", "D", "C", "B (Target)", "A", "A+")))+
+    annotate("text",x=0,y=0,label=pos,vjust=0,size=8,fontface="bold")+
+    coord_fixed()+
+    theme_bw()+
+    theme(axis.text=element_blank(),
+          axis.title=element_blank(),
+          axis.ticks=element_blank(),
+          panel.grid=element_blank(),
+          panel.border=element_blank()) 
+}
+gg.gauge(mean(df$math.score),breaks=c(0,30,50,70,90,100))
+```
+
