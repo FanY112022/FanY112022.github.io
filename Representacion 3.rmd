@@ -1,0 +1,30 @@
+---
+title: "Representacion 3"
+author: "fanfan"
+date: "30/11/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+ 
+plot <- ggplot(iris, aes(Sepal.Length,
+                      Sepal.Width,
+                      color = Species))+
+geom_point(shape = 21)
+ 
+plot
+```
+```{r}
+# Find the convex hull of the points being plotted
+hull <- iris %>% group_by(Species) %>%
+slice(chull(Sepal.Length, Sepal.Width))
+ 
+plot + geom_polygon(data = hull, alpha = 0.2,
+                 aes(fill = Species,colour = Species))
+```
+
